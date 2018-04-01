@@ -12,3 +12,8 @@
 
 # Project-local glide cache, RE: https://github.com/Masterminds/glide/issues/736
 .glide/
+
+out.png
+*.prof
+example-color-5-out.png
+example-color-7-out.png
