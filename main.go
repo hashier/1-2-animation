@@ -222,6 +222,8 @@ func main() {
 	if len(flag.Args()) >= 2 {
 		generateImageFrom(flag.Args())
 	} else if !config.exampleColorImage && config.calibrateFile == "" {
+		fmt.Fprintf(os.Stderr, "Usage of %s:\n", os.Args[0])
+		flag.PrintDefaults()
 		log.Fatal("Error: You need to either provide at least 2 input image OR enable calibration mode OR example mode")
 	}
 
