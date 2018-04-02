@@ -7,7 +7,8 @@ import (
 	"image/png"
 	"log"
 	"os"
-	"runtime/pprof"
+
+	"github.com/hashier/1-2-animation/profile"
 
 	"github.com/fogleman/gg"
 )
@@ -153,19 +154,6 @@ func loadImage(path string) (image.Image, error) {
 	return im, err
 }
 
-func memProfile() {
-	fmt.Println("Writing memory profile to", config.memProfileFile)
-	f, err := os.Create(config.memProfileFile)
-	if err != nil {
-		log.Fatal("could not create memory profile: ", err)
-	}
-	runtime.GC() // get up-to-date statistics
-	if err := pprof.WriteHeapProfile(f); err != nil {
-		log.Fatal("could not write memory profile: ", err)
-	}
-	f.Close()
-}
-
 func exampleColorImages() {
 	var images []image.Image
 	var img image.Image
@@ -204,15 +192,7 @@ func main() {
 	flag.Parse()
 
 	if config.cpuProfile {
-		fmt.Println("Starting CPU profiling to file", config.cpuProfileFile)
-		f, err := os.Create(config.cpuProfileFile)
-		if err != nil {
-			log.Fatal("could not create CPU profile: ", err)
-		}
-		if err := pprof.StartCPUProfile(f); err != nil {
-			log.Fatal("could not start CPU profile: ", err)
-		}
-		defer pprof.StopCPUProfile()
+		profile.CPUProfile(config.cpuProfileFile)
 	}
 
 	if config.calibrateFile != "" {
@@ -231,7 +211,11 @@ func main() {
 		log.Fatal("Error: You need to either provide at least 2 input image OR enable calibration mode OR example mode")
 	}
 
+	if config.cpuProfile {
+		profile.CPUProfileStop()
+	}
+
 	if config.memProfile {
-		memProfile()
+		profile.MemProfile(config.memProfileFile)
 	}
 }
