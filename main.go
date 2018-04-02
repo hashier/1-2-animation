@@ -157,10 +157,13 @@ func memProfile() {
 	fmt.Println("Writing memory profile to", config.memProfileFile)
 	f, err := os.Create(config.memProfileFile)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("could not create memory profile: ", err)
 	}
-	defer f.Close()
-	pprof.WriteHeapProfile(f)
+	runtime.GC() // get up-to-date statistics
+	if err := pprof.WriteHeapProfile(f); err != nil {
+		log.Fatal("could not write memory profile: ", err)
+	}
+	f.Close()
 }
 
 func exampleColorImages() {
@@ -204,10 +207,11 @@ func main() {
 		fmt.Println("Starting CPU profiling to file", config.cpuProfileFile)
 		f, err := os.Create(config.cpuProfileFile)
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal("could not create CPU profile: ", err)
 		}
-		defer f.Close()
-		pprof.StartCPUProfile(f)
+		if err := pprof.StartCPUProfile(f); err != nil {
+			log.Fatal("could not start CPU profile: ", err)
+		}
 		defer pprof.StopCPUProfile()
 	}
 
