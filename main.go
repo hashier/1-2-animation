@@ -3,19 +3,11 @@ package main
 import (
 	"flag"
 	"fmt"
-	"image"
-	"image/png"
 	"log"
 	"os"
 
+	"github.com/hashier/1-2-animation/image"
 	"github.com/hashier/1-2-animation/profile"
-
-	"github.com/fogleman/gg"
-)
-
-const (
-	apart  = 50
-	margin = 50
 )
 
 var (
@@ -48,7 +40,7 @@ func init() {
 	flag.BoolVar(&config.memProfile, "mp", false, "write memory profile to mem.prof")
 	flag.IntVar(&config.frames, "f", 5, "How many input frames (set automatically if images provide, needed for example images)")
 	flag.IntVar(&config.ppf, "ppf", 2, "How many pixel to take from the input image for every frame (how wide is the \"slit\" of the mask")
-	flag.IntVar(&config.width, "x", 1680, "Width of image, only applies to calibration and example images")
+	flag.IntVar(&config.width, "w", 1680, "Width of image, only applies to calibration and example images")
 	flag.IntVar(&config.height, "h", 1200, "Height of image, only applies to calibration and example images")
 }
 
@@ -56,136 +48,6 @@ func check(err error) {
 	if err != nil {
 		log.Fatal(err)
 	}
-}
-
-func generateCalibrationTestImageAndSave() {
-	calImg := createCalibrationTestImage()
-	err := savePNG(calImg, config.calibrateFile)
-	check(err)
-}
-
-func createOneColorImage(r, g, b float64) image.Image {
-	dc := gg.NewContext(config.width, config.height)
-	dc.SetRGB(r, g, b)
-	dc.Clear()
-	return dc.Image()
-}
-
-func createCalibrationTestImage() image.Image {
-	fmt.Println("Generating calibration file", config.calibrateFile)
-	dc := gg.NewContext(config.width, config.height)
-
-	dc.SetRGB(1, 1, 1)
-	dc.Clear()
-
-	dc.SetRGB(0, 0, 0)
-	w := 1.0
-	for i := margin; i <= config.width; i += 2 * apart {
-		x := float64(i)
-		dc.DrawLine(x+0.5, 0, x+0.5, float64(config.height))
-		dc.SetLineWidth(w)
-		dc.Stroke()
-		w += 2
-	}
-	w = 2.0
-	for i := 2 * margin; i <= config.width; i += 2 * apart {
-		x := float64(i)
-		dc.DrawLine(x, 0, x, float64(config.height))
-		dc.SetLineWidth(w)
-		dc.Stroke()
-		w += 2
-	}
-
-	return dc.Image()
-}
-
-func createImage(images []image.Image) image.Image {
-	ppfCounter := 0
-	index := 0
-	width := images[0].Bounds().Size().X
-	height := images[0].Bounds().Size().Y
-
-	fmt.Printf("Generating %dx%d pixel image\n", width, height)
-	img := image.NewRGBA(image.Rect(0, 0, width, height))
-
-	for y := 0; y < height; y++ {
-		for x := 0; x < width; x++ {
-			pixel := images[index].At(x, y)
-			img.Set(x, y, pixel)
-			ppfCounter++
-			if ppfCounter == config.ppf {
-				ppfCounter = 0
-				index = (index + 1) % len(images)
-			}
-		}
-		ppfCounter = 0
-		index = 0
-	}
-
-	return img
-}
-
-func savePNG(img image.Image, path string) error {
-	fmt.Println("Writing image to", path)
-	fd, err := os.Create(path)
-	if err != nil {
-		return err
-	}
-
-	if err := png.Encode(fd, img); err != nil {
-		fd.Close()
-		return err
-	}
-
-	if err := fd.Close(); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func loadImage(path string) (image.Image, error) {
-	fd, err := os.Open(path)
-	if err != nil {
-		return nil, err
-	}
-	defer fd.Close()
-	im, _, err := image.Decode(fd)
-	return im, err
-}
-
-func exampleColorImages() {
-	var images []image.Image
-	var img image.Image
-
-	// gbryg
-	images = append(images, createOneColorImage(0, 1, 0))
-	images = append(images, createOneColorImage(0, 0, 1))
-	images = append(images, createOneColorImage(1, 0, 0))
-	images = append(images, createOneColorImage(1, 1, 0))
-	images = append(images, createOneColorImage(0.5, 0.5, 0.5))
-	fmt.Println("Generating 5 frame color example image")
-	img = createImage(images)
-	check(savePNG(img, "example-color-5-out.png"))
-
-	// gbrygtp
-	images = append(images, createOneColorImage(0, 1, 1))
-	images = append(images, createOneColorImage(1, 0, 1))
-	fmt.Println("Generating 7 frame color example image")
-	img = createImage(images)
-	check(savePNG(img, "example-color-7-out.png"))
-}
-
-func generateImageFrom(files []string) {
-	fmt.Println("Loading input files")
-	images := make([]image.Image, 0)
-	for _, imgFile := range files {
-		img, err := loadImage(imgFile)
-		check(err)
-		images = append(images, img)
-	}
-	outImg := createImage(images)
-	check(savePNG(outImg, config.outputFile))
 }
 
 func main() {
@@ -196,15 +58,15 @@ func main() {
 	}
 
 	if config.calibrateFile != "" {
-		generateCalibrationTestImageAndSave()
+		check(image.GenerateCalibrationTestImageAndSave(config.calibrateFile, config.width, config.height))
 	}
 
 	if config.exampleColorImage {
-		exampleColorImages()
+		image.ExampleColorImages(config.width, config.height, config.ppf)
 	}
 
 	if len(flag.Args()) >= 2 {
-		generateImageFrom(flag.Args())
+		image.GenerateImageFrom(flag.Args(), config.outputFile, config.ppf)
 	} else if !config.exampleColorImage && config.calibrateFile == "" {
 		fmt.Fprintf(os.Stderr, "Usage of %s:\n", os.Args[0])
 		flag.PrintDefaults()
