@@ -1,3 +1,6 @@
+// Package image provides functions to geenrate images for 1-2-animations
+//
+// These methods mostly just help to load/save images and to generate some example/test images.
 package image
 
 import (
@@ -21,6 +24,7 @@ func check(err error) {
 	}
 }
 
+// GenerateCalibrationTestImageAndSave generates a calibration test image
 func GenerateCalibrationTestImageAndSave(file string, w, h int) error {
 	fmt.Println("Generating calibration file", file)
 	calImg := createCalibrationTestImage(w, h)
@@ -117,6 +121,7 @@ func loadImage(path string) (image.Image, error) {
 	return im, err
 }
 
+// ExampleColorImages generates and saves 2 example colored test images
 func ExampleColorImages(w, h, ppf int) {
 	var images []image.Image
 	var img image.Image
@@ -139,6 +144,10 @@ func ExampleColorImages(w, h, ppf int) {
 	check(savePNG(img, "example-color-7-out.png"))
 }
 
+// GenerateImageFrom generates a 1-2-image from the provided file paths
+//
+// file is the filepath the output image will be written to
+// ppf is the pixel width for each frame
 func GenerateImageFrom(files []string, file string, ppf int) {
 	fmt.Println("Loading input files")
 	images := make([]image.Image, 0)

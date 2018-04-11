@@ -1,3 +1,4 @@
+// Package profile provides functions to start/stop profiling of go apps
 package profile
 
 import (
@@ -8,6 +9,7 @@ import (
 	"runtime/pprof"
 )
 
+// MemProfile runs the GC and dump memory profile
 func MemProfile(file string) {
 	fmt.Println("Writing memory profile to", file)
 	f, err := os.Create(file)
@@ -21,6 +23,7 @@ func MemProfile(file string) {
 	f.Close()
 }
 
+// CPUProfile starts CPU profiling and save the result to file
 func CPUProfile(file string) {
 	fmt.Println("Starting CPU profiling to file", file)
 	f, err := os.Create(file)
@@ -32,6 +35,7 @@ func CPUProfile(file string) {
 	}
 }
 
+// CPUProfileStop stops CPU profiling
 func CPUProfileStop() {
 	pprof.StopCPUProfile()
 }
