@@ -40,5 +40,5 @@ For best results I recommend to figure out the amount of frames and the width of
 
 # Example image
 
-![5 framed colored test image](https://github.com/hashier/1-2-animation/blob/master/example/example-color-5-out.png)
-![7 framed colored test image](https://github.com/hashier/1-2-animation/blob/master/example/example-color-7-out.png)
+![5 framed colored test image](https://github.com/hashier/1-2-animation/blob/master/example/example-color-5-out.png?raw=true)
+![7 framed colored test image](https://raw.githubusercontent.com/hashier/1-2-animation/master/example/example-color-7-out.png)
