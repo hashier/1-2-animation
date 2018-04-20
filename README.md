@@ -1,6 +1,6 @@
 # What is 1-2-animation
 
-This command line tool generates Poemotion images. I actually don't know the real name of those images but you can see those images here: https://www.youtube.com/watch?v=Serhd00QNzo
+This command line tool generates Poemotion images. I actually don't know the real name of those images but you can see those images here: [youtube video](https://www.youtube.com/watch?v=Serhd00QNzo)
 
 # How to install it
 
