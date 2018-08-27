@@ -1,3 +1,5 @@
+[![Go Report Card](https://goreportcard.com/badge/github.com/hashier/1-2-animation)](https://goreportcard.com/report/github.com/hashier/1-2-animation)
+
 # What is 1-2-animation
 
 This command line tool generates Poemotion images. I actually don't know the real name of those images but you can see those images here: [youtube video](https://www.youtube.com/watch?v=Serhd00QNzo)
@@ -49,3 +51,7 @@ For best results I recommend to figure out the amount of frames and the width of
 ![5 framed colored test image](https://github.com/hashier/1-2-animation/blob/master/example/example-color-5-out.png?raw=true)
 ![7 framed colored test image](https://raw.githubusercontent.com/hashier/1-2-animation/master/example/example-color-7-out.png)
 ![5 framed rotating molecule](https://raw.githubusercontent.com/hashier/1-2-animation/master/example/molecule/molecule.png)
+
+# Documentation
+
+[godoc](https://godoc.org/github.com/hashier/1-2-animation)
