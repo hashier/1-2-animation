@@ -38,10 +38,10 @@ func init() {
 	flag.BoolVar(&config.exampleColorImage, "example", false, "Write some demo color striped images to the drive. Those can be helpful to determine to \"number of frames\"")
 	flag.BoolVar(&config.cpuProfile, "cp", false, "write CPU profile to cpu.prof")
 	flag.BoolVar(&config.memProfile, "mp", false, "write memory profile to mem.prof")
-	flag.IntVar(&config.frames, "f", 5, "How many input frames (set automatically if images provide, needed for example images)")
+	flag.IntVar(&config.frames, "f", 5, "How many input frames (ignored if images provide, only needed for example images)")
 	flag.IntVar(&config.ppf, "ppf", 2, "How many pixel to take from the input image for every frame (how wide is the \"slit\" of the mask")
 	flag.IntVar(&config.width, "w", 1680, "Width of image, only applies to calibration and example images")
-	flag.IntVar(&config.height, "h", 1200, "Height of image, only applies to calibration and example images")
+	flag.IntVar(&config.height, "h", 1050, "Height of image, only applies to calibration and example images")
 }
 
 func check(err error) {
