@@ -40,9 +40,11 @@ Make sure when you display them that you display them in native size and that yo
 
 For best results I recommend to figure out the amount of frames and the width of the slit your sheet has. For this you can use the calibration image you can get with `-calibrate <file>` (for the width of the slit) and use the example images to determine how many frames there are on your sheet.
 
-# Example images and video
+# Example video
 
-[Youtube demo](https://youtu.be/wS_h5yDLNzM)
+[YouTube demo video](https://youtu.be/wS_h5yDLNzM)
+
+# Example images
 
 ![5 framed colored test image](https://github.com/hashier/1-2-animation/blob/master/example/example-color-5-out.png?raw=true)
 ![7 framed colored test image](https://raw.githubusercontent.com/hashier/1-2-animation/master/example/example-color-7-out.png)
