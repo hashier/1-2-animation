@@ -6,8 +6,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/hashier/1-2-animation/image"
-	"github.com/hashier/1-2-animation/profile"
+	"github.com/hashier/1-2-animation/pkg/image"
+	"github.com/hashier/1-2-animation/pkg/profile"
 )
 
 var (
