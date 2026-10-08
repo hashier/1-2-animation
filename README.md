@@ -1,57 +1,65 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/hashier/1-2-animation)](https://goreportcard.com/report/github.com/hashier/1-2-animation)
 
-# What is 1-2-animation
+# 1-2-animation
 
-This command line tool generates Poemotion images. I actually don't know the real name of those images but you can see those images here: [youtube video](https://www.youtube.com/watch?v=Serhd00QNzo)
+Generates Poemotion images (also known as [barrier-grid animations](https://en.wikipedia.org/wiki/Barrier-grid_animation_and_stereography)): still pictures that start to move when you slide a striped sheet over them.
 
-# How to install it
+![The generated image plus a photo of the striped plastic mask; below, a molecule rotates as the mask slides over the image](example/how-it-works.gif)
 
-```
-$ get -u github.com/hashier/1-2-animation
-```
+## How it works
 
-# How to use it
+The tool takes a few animation frames, cuts them into thin vertical strips and interleaves them into one scrambled-looking image (top left). The mask (top right) is a real plastic sheet with black stripes and narrow clear slits. Lay it over the image on a screen or a printout and each slit shows a strip of one frame only. Slide the sheet sideways and the frames play one after another, as in the animation above.
 
-```
-$ 1-2-animation
-Usage of 1-2-animation:
-  -calibrate string
-    	Write calibration image to <file>. This image can be used to determine how many pixels the "slit" is wide
-  -cp
-    	write CPU profile to cpu.prof
-  -example
-    	Write some demo color striped images to the drive. Those can be helpful to determine to "number of frames"
-  -f int
-    	How many input frames (ignored if images provide, only needed for example images) (default 5)
-  -h int
-    	Height of image, only applies to calibration and example images (default 1050)
-  -mp
-    	write memory profile to mem.prof
-  -o string
-    	output of generated PNG image (default "out.png")
-  -ppf int
-    	How many pixel to take from the input image for every frame (how wide is the "slit" of the mask (default 2)
-  -w int
-    	Width of image, only applies to calibration and example images (default 1680)
-2018/08/27 08:14:36 Error: You need to either provide at least 2 input image OR enable calibration mode OR example mode
+See it in real life in the [demo video](https://youtu.be/wS_h5yDLNzM), or watch [what Poemotion books look like](https://www.youtube.com/watch?v=Serhd00QNzo).
+
+## Install
+
+```sh
+go install github.com/hashier/1-2-animation@latest
 ```
 
-You can simply generate some colored test images via the `-example` flag if you just wanna see what this is about or provide some input images that you want to animate.
+## Usage
 
-Make sure when you display them that you display them in native size and that your image viewer does not enlarge/shrink them to fit your display.
+Pass at least two input images of the same size, one per animation frame:
 
-For best results I recommend to figure out the amount of frames and the width of the slit your sheet has. For this you can use the calibration image you can get with `-calibrate <file>` (for the width of the slit) and use the example images to determine how many frames there are on your sheet.
+```sh
+1-2-animation -o out.png frame1.png frame2.png frame3.png frame4.png frame5.png
+```
 
-# Example video
+| Flag | Default | Description |
+|---|---|---|
+| `-o <file>` | `out.png` | Output PNG. |
+| `-ppf <n>` | `2` | Pixels taken from each frame in turn, which is the width of the slit in your mask. |
+| `-example` | off | Write two colored test images (5 and 7 frames). They help to find out how many frames your mask is made for. |
+| `-calibrate <file>` | off | Write a calibration image. It helps to find out how many pixels wide the slit of your mask is. |
+| `-f <n>` | `5` | Number of frames. Only used for the example images. |
+| `-w <n>`, `-h <n>` | `1680`, `1050` | Image size. Only used for the calibration and example images. |
+| `-cp`, `-mp` | off | Write a CPU profile to `cpu.prof` or a memory profile to `mem.prof`. |
 
-[YouTube demo video](https://youtu.be/wS_h5yDLNzM)
+### Matching your mask
 
-# Example images
+The image only animates if it fits the mask you have, so find out two numbers first:
 
-![5 framed colored test image](https://github.com/hashier/1-2-animation/blob/master/example/example-color-5-out.png?raw=true)
-![7 framed colored test image](https://raw.githubusercontent.com/hashier/1-2-animation/master/example/example-color-7-out.png)
-![5 framed rotating molecule](https://raw.githubusercontent.com/hashier/1-2-animation/master/example/molecule/molecule.png)
+1. **Slit width**: use the calibration image from `-calibrate <file>`.
+2. **Number of frames**: use the test images from `-example`.
 
-# Documentation
+Show the result at its native size. An image viewer that enlarges or shrinks the picture to fit the window changes the strip width, and the effect is gone.
 
-[godoc](https://godoc.org/github.com/hashier/1-2-animation)
+## Examples
+
+Five and seven frame color test images, made with `-example`:
+
+![5 frame color test image](example/example-color-5-out.png)
+![7 frame color test image](example/example-color-7-out.png)
+
+A rotating molecule in five frames. The frames were drawn with [`example/molecule/graph.go`](example/molecule/graph.go):
+
+![5 frame rotating molecule](example/molecule/molecule.png)
+
+## Documentation
+
+[pkg.go.dev](https://pkg.go.dev/github.com/hashier/1-2-animation)
+
+## License
+
+GPL-3.0, see [LICENSE](LICENSE).
